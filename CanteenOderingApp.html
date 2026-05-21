@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canteen Ordering App</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+        }
+        .start-screen h1 {
+            color: white;
+            font-size: 50px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+            z-index: 1;
+            border: 3px solid white;
+            padding: 20px 40px;
+            border-radius: 10px;
+        }
+        .start-screen {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), 
+                        url('https://www.aics.nsw.edu.au/wp-content/uploads/2015/11/Canteen-1024x683.jpg') center/cover;
+            text-align: center;
+        }
+        .start-button {
+            padding: 20px 40px;
+            font-size: 35px;
+            background-color: #ac2525;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            width: 90%;
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .start-button:hover {
+            background-color: #871010;
+        }
+        .menu-screen {
+            display: none;
+            padding: 20px;
+            padding-bottom: 120px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .menu-screen.active {
+            display: block;
+        }
+        .back-button {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #333;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .category-btn {
+            padding: 15px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .category-btn:hover {
+            background-color: #45a049;
+        }
+        .menu-items {
+            display: none;
+        }
+        .menu-items.active {
+            display: block;
+        }
+        .menu-items h2 {
+            margin-top: 20px;
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .items {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .item:last-child {
+            border-bottom: none;
+        }
+        .item-name {
+            flex: 1;
+        }
+        .item-price {
+            font-weight: bold;
+            color: #ff6b6b;
+            margin: 0 15px;
+        }
+        .add-btn {
+            padding: 5px 15px;
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        .add-btn:hover {
+            background-color: #0b7dda;
+        }
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: white;
+            border-top: 3px solid #ac2525;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+        }
+        .cart-total {
+            background-color: #ac2525;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .checkout-actions {
+            display: none;
+            gap: 15px;
+        }
+
+        
+/* Bounce animation */
+        @keyframes bounce {
+            0% {
+                transform: scale(1);
+            }
+
+            25% {
+                transform: scale(1.25);
+            }
+
+            50% {
+                transform: scale(0.95);
+            }
+
+            70% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        } 
+
+        .cart-total.bounce {
+            animation: bounce 0.4s;
+        }
+
+        .cart-total.active {
+            display: block;
+        }
+        
+        .checkout-screen {
+            display: none;
+            margin-top: 30px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .checkout-screen.active {
+            display: block;
+        }
+        
+        .checkout-screen h2 {
+            margin-bottom: 20px;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .remove-btn {
+            background-color: #d9534f;
+            color: white;
+            border: none;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .remove-btn:hover {
+            background-color: #c9302c;
+        }
+
+        .checkout-total {
+            margin-top: 20px;
+            font-size: 22px;
+            font-weight: bold;
+            text-align: right;
+        }
+
+        .checkout-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-right: 15px;
+        }
+
+        .checkout-btn:hover {
+            background-color: #45a049;
+        }
+        
+        .checkout-actions button {
+            padding: 18px 40px;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 22px;
+            font-weight: bold;
+            cursor: pointer;
+            min-width: 240px;
+            transition: transform 0.2s, opacity 0.2s;
+        }
+        
+        .checkout-actions button:hover {
+            transform: scale(1.05);
+            opacity: 0.95;
+        }
+
+        .keep-ordering-btn {
+            background-color: #2196F3;
+        }
+        .keep-ordering-btn:hover {
+            background-color: #0b7dda;
+        }
+        .confirm-order-btn {
+            background-color: #4CAF50;
+        }
+        .confirm-order-btn:hover {
+            background-color: #45a049;
+        }
+        .payment-popup {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+
+            justify-content: center;
+            align-items: center;
+
+            z-index: 999;
+        }
+
+        .payment-box {
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            text-align: center;
+            width: 350px;
+
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .payment-box h2 {
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .payment-btn {
+            width: 100%;
+            padding: 18px;
+            margin: 10px 0;
+
+            border: none;
+            border-radius: 8px;
+
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .online-btn {
+            background-color: #2196F3;
+        }
+
+        .online-btn:hover {
+            background-color: #0b7dda;
+        }
+
+        .counter-btn {
+            background-color: #4CAF50;
+        }
+
+        .counter-btn:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="start-screen" id="startScreen">
+        <h1>Canteen Ordering System</h1>
+        <button class="start-button" onclick="startOrdering()">Press to start ordering</button>
+    </div>
+
+    <div class="menu-screen" id="menuScreen">
+        <button class="back-button" onclick="backToStart()">← Back</button>
+    
+        <div class="bottom-bar">
+            <!-- Normal menu buttons -->
+            <div id="menuButtons" style="display: flex; align-items: center;">
+                <button class="checkout-btn" onclick="showCheckout()">
+                    Checkout
+                </button>
+                <div class="cart-total" id="cartTotal">
+                    Total: $0.00
+                </div>
+            </div>
+
+            <!-- Checkout page buttons -->
+            <div class="checkout-actions" id="checkoutActions">
+
+                <button class="keep-ordering-btn" onclick="keepOrdering()">
+                    Keep Ordering
+                </button>
+
+                <button class="confirm-order-btn" onclick="confirmOrder()">
+                    Confirm Order
+                </button>
+
+            </div>
+</div>
+
+    </div> 
+        <div class="categories" id="categories"></div>
+        <div id="itemsContainer"></div>
+        <div id="checkoutScreen" class="checkout-screen">
+    <h2>Checkout</h2>
+
+    <div id="cartItems"></div>
+
+    <div class="checkout-total" id="checkoutTotal">
+        Total: $0.00
+    </div>
+</div>
+    </div>
+
+    <script>
+        const menuData = {
+            breakfast: [
+                { name: "Hashbrown", price: 1.50 },
+                { name: "Zaatar", price: 4.00 },
+                { name: "Double Bacon Roll", price: 5.00 },
+                { name: "Bacon Egg Roll", price: 5.00 },
+                { name: "Banana Bread", price: 4.80 }
+            ],
+            "salad bowls": [
+                { name: "Fruit Salad (seasonal Fruit)", price: 5.50 },
+                { name: "Greek Salad (lettuce tomato cucumber onion feta olives)", price: 6.50 },
+                { name: "Mediterranean Pasta Salad (sundried tomatoes olive mushrooms pasta)", price: 7.00 },
+                { name: "Pesto Salad (chicken bacon pesco cream)", price: 7.00 },
+                { name: "Chicken Cesar (chicken mushrooms croutons bacon lettuce cheese)", price: 7.00 }
+            ],
+            sandwiches: [
+                { name: "Salad (lettuce tomato cucumber carrot)", price: 5.50 },
+                { name: "Cheese Salad (cheese lettuce tomato cucumber carrot)", price: 6.00 },
+                { name: "Ham Cheese Tomato (leg ham tasty cheese tomato mixed lettuce)", price: 5.50 },
+                { name: "Chicken Salad (chicken lettuce tomato cucumber carrot)", price: 6.00 },
+                { name: "Ham Cheese Salad (ham cheese lettuce tomato cucumber carrot)", price: 6.00 }
+            ],
+            toasties: [
+                { name: "Cheese", price: 3.50 },
+                { name: "Ham Cheese", price: 4.00 },
+                { name: "Ham Cheese Tomato", price: 4.50 }
+            ],
+            sushi: [
+                { name: "Sushi (california/tuna/salmon/chicken/beef)", price: 4.50 },
+                { name: "Rice Paper Rolls 2 pcs (bbq chicken/pork/vegetarian)", price: 7.50 },
+                { name: "Sashimi Salmon Nigiri Pack (4x salmon)", price: 8.50 },
+                { name: "Mixed Seafood Sushi & Nigiri (4x tuna, 3x salmon)", price: 8.50 }
+            ],
+            wraps: [
+                { name: "From the Garden (lettuce tomato cucumber carrot onion)", price: 5.50 },
+                { name: "Falafel (Falafel tomato lettuce cucumber humus)", price: 6.00 },
+                { name: "Harvest Collection (ham cheese lettuce tomato cucumber onion)", price: 6.50 },
+                { name: "Char Grilled Veg (egg plant capsicum mixed lettuce halloumi)", price: 6.50 },
+                { name: "Chicken Farm (grilled chicken mixed lettuce sun dried tomatoes)", price: 7.00 },
+                { name: "Spicy Chicken Tender (chicken tenderloin lettuce dressing)", price: 7.00 }
+            ],
+            milkshakes: [
+                { name: "Chocolate", price: 4.00 },
+                { name: "Caramel", price: 4.00 },
+                { name: "Strawberry", price: 4.00 },
+                { name: "Vanilla", price: 4.00 },
+                { name: "Granola and Yoghurt (Mixed Berries)", price: 4.00 }
+            ],
+            pastas: [
+                { name: "Lasagne (home style)", price: 5.50 },
+                { name: "Gnocchi (traditional slow cooked beef bolognaise gnocchi)", price: 7.00 },
+                { name: "Spaghetti Boscaiola (pasta with creamy bacon and mushroom sauce)", price: 7.00 },
+                { name: "Spaghetti Bolognaise (ground beef garlic onion spices)", price: 7.00 }
+            ],
+            burgers: [
+            
+                { name: "Classic BLT (bacon cheese lettuce tomato bbq sauce)", price: 7.00 },
+                { name: "Portugese Chicken Burger (spicy chicken bacon cheese lettuce mayo)", price: 7.00 },
+                { name: "Chicken Supreme (marinated chicken pineapple cheese lettuce)", price: 7.00 },
+                { name: "Angus Beef (lettuce tomato onion bbq sauce)", price: 7.00 },
+                { name: "Chicken Schnizel Roll (crumbled chicken lettuce dressing)", price: 7.00 }
+            ],
+            refreshments: [
+                { name: "Plain Milk", price: 2.00 },
+                { name: "Flavoured Milk", price: 3.50 },
+                { name: "Water", price: 2.50 },
+                { name: "Orange Juice", price: 4.00 },
+                { name: "Up & Go", price: 3.00 },
+                { name: "Zero Sugar Drinks (various flavours)", price: 2.80 },
+                
+            ],
+            "rice combinations": [
+                { name: "Fried Rice (classic popular Cheese style fried rice)", price: 5.50 },
+                { name: "Butter Chicken (chicken mildly spiced)", price: 7.00 },
+            ],
+            pies: [
+                { name: "Beef Sausage Roll (4-star 100% seasonal beef)", price: 5.00 },
+                { name: "Spinach & Feta Roll", price: 5.00 },
+                { name: "Beef Pie (4-star 100% minced lean beef)", price: 5.00 },
+            ],
+            "panini rolls": [
+                { name: "BLT (bacon cheese lettuce tomato bbq sauce)", price: 7.00 },
+                { name: "Spicy Chicken Spicy Chicken", price: 7.00 },
+                { name: "Chicken Schnitzel (crumbed chicken cheese lettuce tomato mayo)", price: 7.00 },
+            ],
+            snacks: [
+                { name: "Seasonal Fruit", price: 1.50 },
+                { name: "Popcorn", price: 2.50 },
+                { name: "Red Rock Chips", price: 2.80 },
+                { name: "Garlic Bread", price: 2.50 },
+                { name: "Gourmet Muffins", price: 5.00 },
+            ],
+            "gluten free": [
+                { name: "Potato Bake", price: 6.50 },
+                { name: "Fried Rice", price: 6.50 },
+                { name: "Butter Chicken", price: 6.50 },
+                { name: "Chicken Tender Wrap", price: 6.50 },
+            ]
+
+        };
+
+        let cart = [];
+        let total = 0;
+
+        function startOrdering() {
+        document.getElementById('startScreen').style.display = 'none';
+        document.getElementById('menuScreen').classList.add('active');
+        document.getElementById('cartTotal').classList.add('active');
+        displayCategories();
+        }
+
+        function backToStart() {
+            const checkoutScreen = document.getElementById('checkoutScreen');
+            if (checkoutScreen.classList.contains('active')) {
+                checkoutScreen.classList.remove('active');
+                document.getElementById('categories').style.display = 'grid';
+                document.getElementById('itemsContainer').style.display = 'block';
+            } else {
+                document.getElementById('startScreen').style.display = 'flex';
+                document.getElementById('menuScreen').classList.remove('active');
+            }
+        }
+
+        function displayCategories() {
+            const container = document.getElementById('categories');
+            container.innerHTML = '';
+            Object.keys(menuData).forEach(category => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                btn.onclick = () => displayItems(category);
+                container.appendChild(btn);
+            });
+        }
+
+        function displayItems(category) {
+            const container = document.getElementById('itemsContainer');
+            const items = menuData[category];
+            
+            let html = `<div class="menu-items active"><h2>${category.charAt(0).toUpperCase() + category.slice(1)}</h2><div class="items">`;
+            
+            if (items.length === 0) {
+                html += '<p>No items available</p>';
+            } else {
+                items.forEach(item => {
+                    html += `<div class="item">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-price">$${item.price.toFixed(2)}</div>
+                        <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">
+                            Add
+                        </button>
+                    </div>`;
+                });
+            }
+
+            html += '</div></div>';
+            container.innerHTML = html;
+        }
+        function addToCart(itemName, itemPrice) {
+            cart.push({
+                name: itemName,
+                price: itemPrice
+            });
+            total += itemPrice;
+            updateCart();
+        }
+        
+        function updateCart() {
+            document.getElementById('cartTotal').textContent =
+                `Total: $${total.toFixed(2)}`;
+            document.getElementById('checkoutTotal').textContent =
+                `Total: $${total.toFixed(2)}`;
+            const cartItemsContainer = document.getElementById('cartItems');
+            let html = '';
+            if (cart.length === 0) {
+                html = '<p>Your cart is empty.</p>';
+            } else {
+                cart.forEach((item, index) => {
+                    html += `
+                        <div class="cart-item">
+                            <div>
+                                ${item.name} - $${item.price.toFixed(2)}
+                            </div>
+
+                            <button class="remove-btn"
+                                onclick="removeItem(${index})">
+                                Remove
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+
+            cartItemsContainer.innerHTML = html;
+
+            // Bounce animation
+            const cartTotal = document.getElementById('cartTotal');
+            cartTotal.classList.remove('bounce');
+            void cartTotal.offsetWidth;
+            cartTotal.classList.add('bounce');
+        }
+
+        function removeItem(index) {
+            total -= cart[index].price;
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function showCheckout() {
+
+            document.getElementById('categories').style.display = 'none';
+            document.getElementById('itemsContainer').style.display = 'none';
+            document.getElementById('checkoutScreen').classList.add('active');
+
+            // Switch bottom bar buttons
+            document.getElementById('menuButtons').style.display = 'none';
+            document.getElementById('checkoutActions').style.display = 'flex';
+
+            updateCart();
+        }
+
+        function keepOrdering() {
+
+            document.getElementById('categories').style.display = 'grid';
+            document.getElementById('itemsContainer').style.display = 'block';
+            document.getElementById('checkoutScreen').classList.remove('active');
+
+            // Switch buttons back
+            document.getElementById('menuButtons').style.display = 'flex';
+            document.getElementById('checkoutActions').style.display = 'none';
+        }
+
+        function confirmOrder() {
+            document.getElementById('paymentPopup').style.display = 'flex';
+        }
+
+        function selectPayment(method) {
+            if (method === 'online') {
+                alert("Redirecting to online payment...");
+            } else {
+                alert("Order Confirmed! Please pay at the counter.");
+            }
+            document.getElementById('paymentPopup').style.display = 'none';
+            cart = [];
+            total = 0;
+            updateCart();
+            keepOrdering();
+        }
+        </script>
+
+</body>
+    <div id="paymentPopup" class="payment-popup">
+        <div class="payment-box">
+            <h2>Select Payment Method</h2>
+            <button class="payment-btn online-btn"
+                onclick="selectPayment('online')">
+                Pay Online
+            </button>
+            <button class="payment-btn counter-btn"
+                onclick="selectPayment('counter')">
+                Pay at Counter
+            </button>
+        </div>
+    </div>
+</html>
