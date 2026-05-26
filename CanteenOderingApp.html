@@ -33,6 +33,7 @@
                         url('https://www.aics.nsw.edu.au/wp-content/uploads/2015/11/Canteen-1024x683.jpg') center/cover;
             text-align: center;
         }
+
         .start-button {
             padding: 20px 40px;
             font-size: 35px;
@@ -48,19 +49,24 @@
             left: 50%;
             transform: translateX(-50%);
         }
+
         .start-button:hover {
             background-color: #871010;
         }
+
         .menu-screen {
             display: none;
             padding: 20px;
-            padding-bottom: 120px;
+            padding-bottom: 0px;
             max-width: 1200px;
             margin: 0 auto;
         }
+
         .menu-screen.active {
             display: block;
+            padding-bottom: 120px;
         }
+
         .back-button {
             margin-bottom: 20px;
             padding: 10px 20px;
@@ -70,60 +76,154 @@
             border-radius: 5px;
             cursor: pointer;
         }
+
         .categories {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin-bottom: 20px;
         }
+
         .category-btn {
-            padding: 15px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
-            transition: background-color 0.3s;
+        position: relative;
+        height: 160px;
+        border: none;
+        border-radius: 12px;
+        cursor: pointer;
+        background-size: cover;
+        background-position: center;
+        overflow: hidden;
+        transition: transform 0.3s;
         }
+        
         .category-btn:hover {
-            background-color: #45a049;
+        transform: scale(1.03);
         }
+        
+        .category-btn::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(0,0,0,0.45);
+        }
+
+        .category-btn span {
+        position: relative;
+        z-index: 1;
+        color: white;
+        font-size: 24px;
+        font-weight: bold;
+        text-shadow: 2px 2px 5px rgba(0,0,0,0.8);
+        }
+
         .menu-items {
             display: none;
+
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+
+            overflow-y: auto;
+
+            background-color: white;
+            padding: 25px;
+            border-radius: 15px;
+
+            box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+
+            z-index: 1000;
         }
         .menu-items.active {
             display: block;
         }
         .menu-items h2 {
-            margin-top: 20px;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             color: #333;
         }
+
+        .overlay {
+            display: none;
+
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            width: 100%;
+            height: 100%;
+
+            background: rgba(0,0,0,0.5);
+
+            z-index: 999;
+        }
+
+        .overlay.active {
+            display: block;
+        }
+        
         .items {
             background-color: white;
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
         }
+
         .item {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #eee;
+            flex-direction: column;
+
+            background: #fff;
+            border-radius: 12px;
+
+            overflow: hidden;
+
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+
+            border: 1px solid #eee;
         }
+        
         .item:last-child {
             border-bottom: none;
         }
-        .item-name {
-            flex: 1;
+
+        .item img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
         }
+
+        .item-content {
+            padding: 15px;
+        }
+
+        .item-name {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
         .item-price {
             font-weight: bold;
             color: #ff6b6b;
             margin: 0 15px;
         }
+
+        .item-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+        }
+
         .add-btn {
             padding: 5px 15px;
             background-color: #2196F3;
@@ -140,13 +240,19 @@
             bottom: 0;
             left: 0;
             width: 100%;
+
             background-color: white;
             border-top: 3px solid #ac2525;
+
             padding: 15px 20px;
+
             display: flex;
             justify-content: center;
             align-items: center;
+
             box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+            
+            z-index: 100;;
         }
         .cart-total {
             background-color: #ac2525;
@@ -193,6 +299,31 @@
             display: block;
         }
         
+        .cart-indicator {
+            background-color: #ac2525;
+            color: white;
+
+            padding: 12px 18px;
+            border-radius: 50px;
+
+            font-size: 20px;
+            font-weight: bold;
+
+            display: flex;
+            align-items: center;
+            gap: 10px;
+
+            margin-left: 15px;
+
+            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+
+            transition: transform 0.2s;
+        }
+
+        .cart-indicator.bump {
+            transform: scale(1.15);
+        }
+
         .checkout-screen {
             display: none;
             margin-top: 30px;
@@ -344,6 +475,27 @@
         .counter-btn:hover {
             background-color: #45a049;
         }
+
+        .popup-back-btn {
+            background-color: #333;
+            color: white;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 10px 18px;
+            margin-bottom: 20px;
+
+            cursor: pointer;
+            font-size: 16px;
+
+            transition: background-color 0.3s;
+        }
+
+        .popup-back-btn:hover {
+            background-color: #111;
+        }
+
     </style>
 </head>
 <body>
@@ -358,13 +510,20 @@
         <div class="bottom-bar">
             <!-- Normal menu buttons -->
             <div id="menuButtons" style="display: flex; align-items: center;">
+                
                 <button class="checkout-btn" onclick="showCheckout()">
                     Checkout
                 </button>
+                
                 <div class="cart-total" id="cartTotal">
                     Total: $0.00
                 </div>
+            
+            <div class="cart-indicator">
+                🛒 <span id="cartCount">0</span>
             </div>
+
+        </div>
 
             <!-- Checkout page buttons -->
             <div class="checkout-actions" id="checkoutActions">
@@ -377,124 +536,331 @@
                     Confirm Order
                 </button>
 
-            </div>
-</div>
+            </div> <!-- closes checkoutActions -->
+        </div> <!-- closes bottom-bar -->
 
-    </div> 
         <div class="categories" id="categories"></div>
         <div id="itemsContainer"></div>
-        <div id="checkoutScreen" class="checkout-screen">
-    <h2>Checkout</h2>
+        
+        <div id="checkoutScreen" class="checkout-screen">    
+            <h2>Checkout</h2>
 
-    <div id="cartItems"></div>
+            <div id="cartItems"></div>
 
-    <div class="checkout-total" id="checkoutTotal">
-        Total: $0.00
-    </div>
-</div>
-    </div>
+            <div class="checkout-total" id="checkoutTotal">
+                Total: $0.00
+            </div>
+        </div>
+    
+    </div> <!-- closes menuScreen -->
 
     <script>
         const menuData = {
+
             breakfast: [
-                { name: "Hashbrown", price: 1.50 },
-                { name: "Zaatar", price: 4.00 },
-                { name: "Double Bacon Roll", price: 5.00 },
-                { name: "Bacon Egg Roll", price: 5.00 },
-                { name: "Banana Bread", price: 4.80 }
+                {   name: "Hashbrown", 
+                    price: 1.50,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXF88NlukMZl6FNpZxuijDssbyGVbfIqOu0g&s=400"
+                },
+                {   name: "Zaatar",  
+                    price: 4.00,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4ZI2JYF-ei8fKSjo7pQCYrFYSCMvHKSEL1g&s"
+                },
+                {   name: "Double Bacon Roll",
+                    price: 5.00,
+                    image: "https://www.recipetineats.com/tachyon/2015/02/DSC_0448.jpg?resize=500%2C375"
+                },
+                {   name: "Bacon Egg Roll",
+                    price: 5.00,
+                    image: "https://eightforestlane.com/wp-content/uploads/2024/07/Bacon-and-Egg-Rolls_SQ-1.jpg"
+                },
+                {   name: "Banana Bread",
+                    price: 4.80,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRXuRPYbUjREpMvDKUpYX-sbBw1MUEXLn1xZQ&s"
+                }
             ],
             "salad bowls": [
-                { name: "Fruit Salad (seasonal Fruit)", price: 5.50 },
-                { name: "Greek Salad (lettuce tomato cucumber onion feta olives)", price: 6.50 },
-                { name: "Mediterranean Pasta Salad (sundried tomatoes olive mushrooms pasta)", price: 7.00 },
-                { name: "Pesto Salad (chicken bacon pesco cream)", price: 7.00 },
-                { name: "Chicken Cesar (chicken mushrooms croutons bacon lettuce cheese)", price: 7.00 }
+                {   name: "Fruit Salad (seasonal Fruit)", 
+                    price: 5.50,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTB1scwkMofGIm8kOM_l8cdriB3C9IkZWM2AQ&s"
+                },
+                {   name: "Greek Salad (lettuce tomato cucumber onion feta olives)", 
+                    price: 6.50,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkmgVq2RxvqK7orfJnq4CkkL2-_58FZra7Ag&s"
+                },
+                {   name: "Mediterranean Pasta Salad (sundried tomatoes olive mushrooms pasta)", 
+                    price: 7.00,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoeMFyCF8ak-eCsC2_g5auIXVafb2LrA7CsQ&s&s"
+                },
+                {   name: "Pesto Salad (chicken bacon pesto cream)", 
+                    price: 7.00,
+                    image: "https://honestcooking.com/wp-content/uploads/2026/03/pesto-bacon-chicken-salad-260x195.png"
+                },
+                {   name: "Chicken Cesar (chicken mushrooms croutons bacon lettuce cheese)", 
+                    price: 7.00,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfRFeoNPqkEtWypXi2J9Y355hJQpk-1AxRBw&s"
+                }
             ],
             sandwiches: [
-                { name: "Salad (lettuce tomato cucumber carrot)", price: 5.50 },
-                { name: "Cheese Salad (cheese lettuce tomato cucumber carrot)", price: 6.00 },
-                { name: "Ham Cheese Tomato (leg ham tasty cheese tomato mixed lettuce)", price: 5.50 },
-                { name: "Chicken Salad (chicken lettuce tomato cucumber carrot)", price: 6.00 },
-                { name: "Ham Cheese Salad (ham cheese lettuce tomato cucumber carrot)", price: 6.00 }
+                {   name: "Salad (lettuce tomato cucumber carrot)", 
+                    price: 5.50,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRBYkbyCSH-iglO4-IS_IeWrxjhykOdtkxJ4g&s"
+                },
+                {   name: "Cheese Salad (cheese lettuce tomato cucumber carrot)", 
+                    price: 6.00,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTUIM_DyIbD5VHzyio0fuFM-3rCdQwQNGjxMQ&s"
+                },
+                {   name: "Ham Cheese Tomato (leg ham tasty cheese tomato mixed lettuce)", 
+                    price: 5.50,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRtjEQid5Gqt3KKH0nB6Gq1QfdQxVkMHBfuPA&s"
+                },
+                {   name: "Chicken Salad (chicken lettuce tomato cucumber carrot)", 
+                    price: 6.00,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTsq5ts493h7GVELGx0JVgooY-ghQES3cW3SA&s"
+                },
+                {   name: "Ham Cheese Salad (ham cheese lettuce tomato cucumber carrot)", 
+                    price: 6.00,
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4mNtXiWdw-dOFVMNMtzSm3gBvINCtocVc9A&s"
+                }
             ],
             toasties: [
-                { name: "Cheese", price: 3.50 },
-                { name: "Ham Cheese", price: 4.00 },
-                { name: "Ham Cheese Tomato", price: 4.50 }
+                {   name: "Cheese", 
+                    price: 3.50, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTgkUDkrGv8XuYNgzO9h1zwt7_5be8Q2Ih-IQ&s" 
+                },
+                {   name: "Ham Cheese",     
+                    price: 4.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT274wBfCjzyJMfL88B0cnEmb4DdnrivCEC1g&s" 
+                },
+                {   name: "Ham Cheese Tomato", 
+                    price: 4.50,    
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRP8B2CvaLcToUEXFanXYGfq_JOfjUerysCRQ&s" 
+                }
             ],
             sushi: [
-                { name: "Sushi (california/tuna/salmon/chicken/beef)", price: 4.50 },
-                { name: "Rice Paper Rolls 2 pcs (bbq chicken/pork/vegetarian)", price: 7.50 },
-                { name: "Sashimi Salmon Nigiri Pack (4x salmon)", price: 8.50 },
-                { name: "Mixed Seafood Sushi & Nigiri (4x tuna, 3x salmon)", price: 8.50 }
+                {   name: "Sushi (california/tuna/salmon/ chicken/beef)", 
+                    price: 4.50, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRifnY42eeOuXzGKKvv6Qm27pZb_Kq_mWz42Q&s" 
+                },
+                {   name: "Rice Paper Rolls 2 pcs (bbq chicken/pork/vegetarian)", 
+                    price: 7.50, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuG8B-MdlkpZgUA-9Izn4myS_RNHu_8RsQAQ&s" 
+                },
+                {   name: "Sashimi Salmon Nigiri Pack (4x salmon)", 
+                    price: 8.50, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxY7kdIrrGcXDWfOLU_h1GXFRJiR8spYXe8w&s" 
+                },
+                {   name: "Mixed Seafood Sushi & Nigiri (4x tuna, 4x salmon)", 
+                    price: 8.50, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTbJu_A81hSjp73BYruMFyIyk_ZrDp_-03qOA&s" 
+                }
             ],
             wraps: [
-                { name: "From the Garden (lettuce tomato cucumber carrot onion)", price: 5.50 },
-                { name: "Falafel (Falafel tomato lettuce cucumber humus)", price: 6.00 },
-                { name: "Harvest Collection (ham cheese lettuce tomato cucumber onion)", price: 6.50 },
-                { name: "Char Grilled Veg (egg plant capsicum mixed lettuce halloumi)", price: 6.50 },
-                { name: "Chicken Farm (grilled chicken mixed lettuce sun dried tomatoes)", price: 7.00 },
-                { name: "Spicy Chicken Tender (chicken tenderloin lettuce dressing)", price: 7.00 }
+                {   name: "From the Garden (lettuce tomato cucumber carrot onion)", 
+                    price: 5.50, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT_0Yq7ISwMM0qAiQ-hJYNLmBifMATIwD35lg&s" 
+                },
+                {   name: "Falafel (Falafel tomato lettuce cucumber humus)", 
+                    price: 6.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeJbTRqeU3RM1rFcti0xf3vQLM4FJaf4F6wQ&s" 
+                },
+                {   name: "Harvest Collection (ham cheese lettuce tomato cucumber onion)", 
+                    price: 6.50, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRV9OsjD7-1GZtQz4lcLJ26FWcTimO-fh6_LQ&s" 
+                },
+                {   name: "Char Grilled Veg (egg plant capsicum mixed lettuce halloumi)", 
+                    price: 6.50, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxV5J8fINyT8E8DHLCjgTW08PO1-XCCRlVjA&s" 
+                },
+                {   name: "Chicken Farm (grilled chicken mixed lettuce sun dried tomatoes)", 
+                    price: 7.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREi0vKtdpA4ceU_2elgbNuLBwx97MiCPYOMQ&s" 
+                },
+                {   name: "Spicy Chicken Tender (chicken tenderloin lettuce dressing)", 
+                    price: 7.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSfkKpct3lIMQnMB5jG1nd3D4p4Dzgx3YRANg&s" 
+                }
             ],
             milkshakes: [
-                { name: "Chocolate", price: 4.00 },
-                { name: "Caramel", price: 4.00 },
-                { name: "Strawberry", price: 4.00 },
-                { name: "Vanilla", price: 4.00 },
-                { name: "Granola and Yoghurt (Mixed Berries)", price: 4.00 }
+                {   name: "Chocolate", 
+                    price: 4.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1JUb8kUbO1f14biMczGM-M71c_jk6WhbwTw&s" 
+                },
+                {   name: "Caramel", 
+                    price: 4.00, 
+                    image: "https://cdn-productdbimages.barry-callebaut.com/sites/default/files/styles/web_gm_callebaut-detail/public/externals/ddb40be9909fb47f33a0a768c1c850bd.jpg?itok=U3LizhSm" 
+                },
+                {   name: "Strawberry", 
+                    price: 4.00, 
+                    image: "https://cdn.bakedbree.com/uploads/2025/07/a-strawberry_milkshake-feature-1.jpeg" 
+                },
+                {   name: "Vanilla", 
+                    price: 4.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQlB3xfo8yZVAiN8vRO3erAMaj6jrpnk5685A&s" 
+                },
+                {   name: "Granola and Yoghurt (Mixed Berries)", 
+                    price: 4.00, 
+                    image: "https://images.contentstack.io/v3/assets/blt9039451385f46c16/blt1dc3e3ce0f9d0096/635fd68777cccd12e6707ec7/SANI021_YoghurtBerrySmoothie_1408-HiRes.jpg" 
+                }
             ],
             pastas: [
-                { name: "Lasagne (home style)", price: 5.50 },
-                { name: "Gnocchi (traditional slow cooked beef bolognaise gnocchi)", price: 7.00 },
-                { name: "Spaghetti Boscaiola (pasta with creamy bacon and mushroom sauce)", price: 7.00 },
-                { name: "Spaghetti Bolognaise (ground beef garlic onion spices)", price: 7.00 }
+                {   name: "Lasagne (home style)", 
+                    price: 5.50, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsiWPwWiJrAoiPGDH4mS_4GnCjOSUbtUrMrA&s" 
+                },
+                {   name: "Gnocchi (traditional slow cooked beef bolognaise gnocchi)", 
+                    price: 7.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ42ob8NUqTfRj1MVp9HZA4l0j2gktGE0rE6w&s" 
+                },
+                {   name: "Spaghetti Boscaiola (pasta with creamy bacon and mushroom sauce)", 
+                    price: 7.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIztyvpS6wwDNvfLBUoIg24pDhJ3FRxkuORw&s" 
+                },
+                {   name: "Spaghetti Bolognese (ground beef garlic onion spices)", 
+                    price: 7.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScFhU4ICZV5PGLecgU3j9bP7a-ZpUpgj8WCg&s" 
+                }
             ],
             burgers: [
             
-                { name: "Classic BLT (bacon cheese lettuce tomato bbq sauce)", price: 7.00 },
-                { name: "Portugese Chicken Burger (spicy chicken bacon cheese lettuce mayo)", price: 7.00 },
-                { name: "Chicken Supreme (marinated chicken pineapple cheese lettuce)", price: 7.00 },
-                { name: "Angus Beef (lettuce tomato onion bbq sauce)", price: 7.00 },
-                { name: "Chicken Schnizel Roll (crumbled chicken lettuce dressing)", price: 7.00 }
+                {   name: "Classic BLT (bacon cheese lettuce tomato bbq sauce)", 
+                    price: 7.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkyI8FiZESUyUSA_ZscWIhqNg-Rdy93FR5CQ&s"   
+                },
+                {   name: "Portugese Chicken Burger (spicy chicken bacon cheese lettuce mayo)", 
+                    price: 7.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLKMdC1JL7tPz7oWiS8RWhUXFhu1LlhGgVCw&s" 
+                },
+                {   name: "Chicken Supreme (marinated chicken pineapple cheese lettuce)", 
+                    price: 7.00, 
+                    image: "https://img.taste.com.au/sduxEaTg/w720-h480-cfill-q80/taste/2017/03/33_hawaiian_chicken_burger-35-edit-125119-1.jpg" 
+                },
+                {   name: "Angus Beef (lettuce tomato onion bbq sauce)", 
+                    price: 7.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSj5a3LH9o2t8-FOzEjkgibp1_TitlUuDXT4g&s" 
+                },
+                {   name: "Chicken Schnizel Roll (crumbled chicken lettuce dressing)", 
+                    price: 7.00, 
+                    image: "https://eightforestlane.com/wp-content/uploads/2025/10/Chicken-Schnitzel-Sandwich_WEB-12.jpg" 
+                }
             ],
             refreshments: [
-                { name: "Plain Milk", price: 2.00 },
-                { name: "Flavoured Milk", price: 3.50 },
-                { name: "Water", price: 2.50 },
-                { name: "Orange Juice", price: 4.00 },
-                { name: "Up & Go", price: 3.00 },
-                { name: "Zero Sugar Drinks (various flavours)", price: 2.80 },
+                {   name: "Plain Milk", 
+                    price: 2.00, 
+                    image: "https://assets3.thrillist.com/v1/image/1694700/1200x600/scale;;webp=auto;jpeg_quality=85.jpg" 
+                },    
+                {   name: "Water", 
+                    price: 2.50, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYuYjAb6gSohmcPVx4FwM2AAYCP3dxchBigg&s" 
+                },
+                {   name: "Orange Juice", 
+                    price: 4.00, 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4RS8HJsC7_r4yml6thJOixL-4pyK1fFwkBQ&s" 
+                },
+                {   name: "Zero Sugar Drinks (various flavours)", 
+                    price: 2.80, 
+                    image: "https://www.tastingtable.com/img/gallery/13-popular-zero-sugar-sodas-ranked-worst-to-best/l-intro-1681141295.jpg" 
+                },
                 
             ],
             "rice combinations": [
-                { name: "Fried Rice (classic popular Cheese style fried rice)", price: 5.50 },
-                { name: "Butter Chicken (chicken mildly spiced)", price: 7.00 },
+                {   name: "Fried Rice (classic popular Cheese style fried rice)",  
+                    price: 5.50, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
+                {   name: "Butter Chicken (chicken mildly spiced)", 
+                    price: 7.00, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
             ],
             pies: [
-                { name: "Beef Sausage Roll (4-star 100% seasonal beef)", price: 5.00 },
-                { name: "Spinach & Feta Roll", price: 5.00 },
-                { name: "Beef Pie (4-star 100% minced lean beef)", price: 5.00 },
+                {   name: "Beef Sausage Roll (4-star 100% seasonal beef)", 
+                    price: 5.00, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
+                {   name: "Spinach & Feta Roll", 
+                    price: 5.00, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
+                {   name: "Beef Pie (4-star 100% minced lean beef)", 
+                    price: 5.00, 
+                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                },
             ],
             "panini rolls": [
-                { name: "BLT (bacon cheese lettuce tomato bbq sauce)", price: 7.00 },
-                { name: "Spicy Chicken Spicy Chicken", price: 7.00 },
-                { name: "Chicken Schnitzel (crumbed chicken cheese lettuce tomato mayo)", price: 7.00 },
+                {   name: "BLT (bacon cheese lettuce tomato bbq sauce)", 
+                    price: 7.00, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
+                {   name: "Spicy Chicken Spicy Chicken", 
+                    price: 7.00, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
+                {   name: "Chicken Schnitzel (crumbed chicken cheese lettuce tomato mayo)", 
+                    price: 7.00, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
             ],
             snacks: [
-                { name: "Seasonal Fruit", price: 1.50 },
-                { name: "Popcorn", price: 2.50 },
-                { name: "Red Rock Chips", price: 2.80 },
-                { name: "Garlic Bread", price: 2.50 },
-                { name: "Gourmet Muffins", price: 5.00 },
+                {   name: "Seasonal Fruit", 
+                    price: 1.50, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
+                {   name: "Popcorn",    
+                    price: 2.50, 
+                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                },
+                {   name: "Red Rock Chips",     
+                    price: 2.80, 
+                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                },
+                {   name: "Garlic Bread", 
+                    price: 2.50, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
+                {   name: "Gourmet Muffins", 
+                    price: 5.00, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
             ],
             "gluten free": [
-                { name: "Potato Bake", price: 6.50 },
-                { name: "Fried Rice", price: 6.50 },
-                { name: "Butter Chicken", price: 6.50 },
-                { name: "Chicken Tender Wrap", price: 6.50 },
-            ]
+                {   name: "Potato Bake", 
+                    price: 6.50, 
+                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                },
+                {   name: "Fried Rice", 
+                    price: 6.50, 
+                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                },
+                {   name: "Butter Chicken", 
+                    price: 6.50, 
+                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                },
+                {   name: "Chicken Tender Wrap", 
+                    price: 6.50, 
+                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                },
+            ],
 
         };
+            //Images for each category
+            const categoryImages = {
+                breakfast: "https://images.unsplash.com/photo-1533089860892-a7c6f0a88666?w=400&q=70",
+                "salad bowls": "https://images.unsplash.com/photo-1607532941433-304659e8198a?w=400&q=70",
+                sandwiches: "https://images.unsplash.com/photo-1553909489-cd47e0907980?w=400&q=70",
+                toasties: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=400&q=70",
+                sushi: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&q=70",
+                wraps: "https://images.unsplash.com/photo-1626700051175-6818013e1d4f?w=400&q=70",
+                milkshakes: "https://images.unsplash.com/photo-1579954115545-a95591f28bfc?w=400&q=70",
+                pastas: "https://images.unsplash.com/photo-1555949258-eb67b1ef0ceb?w=400&q=70",
+                burgers: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=400&q=70",
+                refreshments: "https://images.unsplash.com/photo-1527960471264-932f39eb5846?w=400&q=70",
+                "rice combinations": "https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400&q=70",
+                pies: "https://images.unsplash.com/photo-1608039783021-6116a558f0c5?w=400&q=70",
+                "panini rolls": "https://plus.unsplash.com/premium_photo-1700677186249-76a78b65ce5b?w=400&q=70",
+                snacks: "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?w=400&q=70",
+                "gluten free": "https://images.unsplash.com/photo-1723910065922-67b84af65b23?w=400&q=70"
+            };
 
         let cart = [];
         let total = 0;
@@ -507,24 +873,45 @@
         }
 
         function backToStart() {
-            const checkoutScreen = document.getElementById('checkoutScreen');
+
+            const checkoutScreen =
+                document.getElementById('checkoutScreen');
+
             if (checkoutScreen.classList.contains('active')) {
+
                 checkoutScreen.classList.remove('active');
+
                 document.getElementById('categories').style.display = 'grid';
                 document.getElementById('itemsContainer').style.display = 'block';
+
+                // FIXES BOTTOM BAR
+                document.getElementById('menuButtons').style.display = 'flex';
+                document.getElementById('checkoutActions').style.display = 'none';
+
             } else {
+
                 document.getElementById('startScreen').style.display = 'flex';
                 document.getElementById('menuScreen').classList.remove('active');
+
             }
         }
 
         function displayCategories() {
             const container = document.getElementById('categories');
             container.innerHTML = '';
+
+
             Object.keys(menuData).forEach(category => {
                 const btn = document.createElement('button');
                 btn.className = 'category-btn';
-                btn.textContent = category.charAt(0).toUpperCase() + category.slice(1);
+                btn.style.backgroundImage =
+                    `url('${categoryImages[category]}')`;
+                btn.innerHTML =
+                    `<span>${
+                        category.charAt(0).toUpperCase() +
+                        category.slice(1)
+                    }</span>`;
+
                 btn.onclick = () => displayItems(category);
                 container.appendChild(btn);
             });
@@ -533,26 +920,71 @@
         function displayItems(category) {
             const container = document.getElementById('itemsContainer');
             const items = menuData[category];
-            
-            let html = `<div class="menu-items active"><h2>${category.charAt(0).toUpperCase() + category.slice(1)}</h2><div class="items">`;
-            
+
+            let html = `
+                <div class="menu-items active">
+
+                    <button class="popup-back-btn" onclick="closeMenu()">
+                        ← Back
+                    </button>
+
+                    <h2>
+                        ${category.charAt(0).toUpperCase() + category.slice(1)}
+                    </h2>
+
+                    <div class="items">
+            `;
+
             if (items.length === 0) {
                 html += '<p>No items available</p>';
             } else {
                 items.forEach(item => {
-                    html += `<div class="item">
-                        <div class="item-name">${item.name}</div>
-                        <div class="item-price">$${item.price.toFixed(2)}</div>
-                        <button class="add-btn" onclick="addToCart('${item.name}', ${item.price})">
-                            Add
-                        </button>
-                    </div>`;
+                    html += `
+                        <div class="item">
+
+                            <img src="${item.image}" alt="${item.name}">
+
+                            <div class="item-content">
+
+                                <div class="item-name">
+                                    ${item.name}
+                                </div>
+
+                                <div class="item-bottom">
+
+                                    <div class="item-price">
+                                        $${item.price.toFixed(2)}
+                                    </div>
+
+                                    <button class="add-btn"
+                                        onclick="addToCart('${item.name}', ${item.price})">
+                                        Add
+                                    </button>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+                    `;
                 });
             }
 
-            html += '</div></div>';
+            html += `
+                    </div>
+                </div>
+            `;
+
             container.innerHTML = html;
+
+            document.getElementById('overlay').classList.add('active');
         }
+
+        function closeMenu() {
+            document.getElementById('itemsContainer').innerHTML = '';
+            document.getElementById('overlay').classList.remove('active');
+        }
+
         function addToCart(itemName, itemPrice) {
             cart.push({
                 name: itemName,
@@ -565,10 +997,16 @@
         function updateCart() {
             document.getElementById('cartTotal').textContent =
                 `Total: $${total.toFixed(2)}`;
+
             document.getElementById('checkoutTotal').textContent =
                 `Total: $${total.toFixed(2)}`;
+
+            document.getElementById('cartCount').textContent = cart.length;
+
             const cartItemsContainer = document.getElementById('cartItems');
-            let html = '';
+
+            let html = '';  
+
             if (cart.length === 0) {
                 html = '<p>Your cart is empty.</p>';
             } else {
@@ -638,14 +1076,17 @@
                 alert("Order Confirmed! Please pay at the counter.");
             }
             document.getElementById('paymentPopup').style.display = 'none';
+            
+            
             cart = [];
             total = 0;
+            
+            
             updateCart();
             keepOrdering();
         }
-        </script>
-
-</body>
+    </script>
+    
     <div id="paymentPopup" class="payment-popup">
         <div class="payment-box">
             <h2>Select Payment Method</h2>
@@ -659,4 +1100,8 @@
             </button>
         </div>
     </div>
+    
+    <div id="overlay" class="overlay" onclick="closeMenu()"></div>
+
+</body>  
 </html>
