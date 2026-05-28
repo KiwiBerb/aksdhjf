@@ -164,7 +164,7 @@
         .overlay.active {
             display: block;
         }
-        
+            
         .items {
             background-color: white;
             padding: 20px;
@@ -183,12 +183,15 @@
             background: #fff;
             border-radius: 12px;
 
-            overflow: hidden;
+            overflow: visible;
 
             margin-bottom: 20px;
             padding-bottom: 15px;
 
             border: 1px solid #eee;
+
+            position: relative;
+            
         }
         
         .item:last-child {
@@ -203,6 +206,50 @@
 
         .item-content {
             padding: 15px;
+        }
+
+        .quantity-popup {
+            display: none;
+
+            position: fixed;
+
+            top: 50%;
+            left: 50%;
+
+            transform: translate(-50%, -50%);
+
+            width: 320px;
+            max-width: 90vw;
+
+            background: white;
+
+            padding: 30px;
+
+            border: 4px solid #ac2525;   /* NEW BORDER */
+            border-radius: 18px;
+
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+
+            z-index: 9999;
+
+            text-align: center;
+        }
+
+        .quantity-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+
+            margin-top: 15px;
+            margin-bottom: 15px;
+        }
+
+        .quantity-text {
+            margin-bottom: 12px;
+            font-weight: bold;
+            font-size: 20px;
+            text-align: center;
         }
 
         .item-name {
@@ -235,6 +282,76 @@
         .add-btn:hover {
             background-color: #0b7dda;
         }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .popup-actions {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-top: 18px;
+        }
+
+        .popup-btn {
+            border: none;
+            padding: 10px 18px;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .confirm-btn {
+            background-color: #4CAF50;
+        }
+
+        .confirm-btn:hover {
+            background-color: #45a049;
+        }
+
+        .cancel-btn {
+            background-color: #d9534f;
+        }
+
+        .cancel-btn:hover {
+            background-color: #c9302c;
+        }
+
+        .qty-btn {
+            width: 32px;
+            height: 32px;
+
+            border: none;
+            border-radius: 50%;
+
+            background-color: #2196F3;
+            color: white;
+
+            font-size: 20px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .qty-btn:hover {
+            background-color: #0b7dda;
+            transform: scale(1.1);
+        }
+
+        .qty-number {
+            font-size: 18px;
+            font-weight: bold;
+            min-width: 20px;
+            text-align: center;
+        }
+
         .bottom-bar {
             position: fixed;
             bottom: 0;
@@ -460,11 +577,11 @@
             transition: 0.3s;
         }
 
-        .online-btn {
+        .card-btn {
             background-color: #2196F3;
         }
 
-        .online-btn:hover {
+        .card-btn:hover {
             background-color: #0b7dda;
         }
 
@@ -494,6 +611,50 @@
 
         .popup-back-btn:hover {
             background-color: #111;
+        }
+
+        .empty-cart-box {
+            background-color: white;
+            padding: 35px;
+            border-radius: 12px;
+            text-align: center;
+            width: 350px;
+
+            border: 3px solid #d9534f;
+
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .empty-cart-box h2 {
+            color: #d9534f;
+            margin-bottom: 15px;
+        }
+
+        .empty-cart-box p {
+            font-size: 18px;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .empty-cart-btn {
+            background-color: #2196F3;
+            color: white;
+
+            border: none;
+            border-radius: 8px;
+
+            padding: 12px 25px;
+
+            font-size: 18px;
+            font-weight: bold;
+
+            cursor: pointer;
+
+            transition: 0.3s;
+        }
+
+        .empty-cart-btn:hover {
+            background-color: #0b7dda;
         }
 
     </style>
@@ -594,7 +755,7 @@
                 },
                 {   name: "Pesto Salad (chicken bacon pesto cream)", 
                     price: 7.00,
-                    image: "https://honestcooking.com/wp-content/uploads/2026/03/pesto-bacon-chicken-salad-260x195.png"
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTqkqutvyGhBOk1Tfq5uqnpNacoda9ViPtRHA&s"
                 },
                 {   name: "Chicken Cesar (chicken mushrooms croutons bacon lettuce cheese)", 
                     price: 7.00,
@@ -684,7 +845,7 @@
             milkshakes: [
                 {   name: "Chocolate", 
                     price: 4.00, 
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS1JUb8kUbO1f14biMczGM-M71c_jk6WhbwTw&s" 
+                    image: "https://iambaker.net/wp-content/uploads/2024/06/Chocolate-Shake-4.jpg" 
                 },
                 {   name: "Caramel", 
                     price: 4.00, 
@@ -704,11 +865,11 @@
                 }
             ],
             pastas: [
-                {   name: "Lasagne (home style)", 
+                {   name: "Lasagne", 
                     price: 5.50, 
                     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQsiWPwWiJrAoiPGDH4mS_4GnCjOSUbtUrMrA&s" 
                 },
-                {   name: "Gnocchi (traditional slow cooked beef bolognaise gnocchi)", 
+                {   name: "Gnocchi", 
                     price: 7.00, 
                     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ42ob8NUqTfRj1MVp9HZA4l0j2gktGE0rE6w&s" 
                 },
@@ -751,7 +912,7 @@
                 },    
                 {   name: "Water", 
                     price: 2.50, 
-                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRYuYjAb6gSohmcPVx4FwM2AAYCP3dxchBigg&s" 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7VlAp0GFb-vVBZh6C7l8Z-I86G4gE74UfMA&s" 
                 },
                 {   name: "Orange Juice", 
                     price: 4.00, 
@@ -759,86 +920,93 @@
                 },
                 {   name: "Zero Sugar Drinks (various flavours)", 
                     price: 2.80, 
+                    flavours: [
+                        "Coke Zero",
+                        "Pepsi Max",
+                        "Sprite Zero",
+                        "Fanta Zero",
+                        "Solo Zero"
+                    ],
                     image: "https://www.tastingtable.com/img/gallery/13-popular-zero-sugar-sodas-ranked-worst-to-best/l-intro-1681141295.jpg" 
                 },
                 
             ],
             "rice combinations": [
-                {   name: "Fried Rice (classic popular Cheese style fried rice)",  
+                {   name: "Fried Rice",  
                     price: 5.50, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQuweZySk0rKaBETG86y0tzwr9vfpftdKBQ&s" 
                 },
-                {   name: "Butter Chicken (chicken mildly spiced)", 
+                {   name: "Butter Chicken", 
                     price: 7.00, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcReT_rsrvh4738w-auhOt8j7qaLMbWLcTWUCw&s" 
                 },
             ],
             pies: [
-                {   name: "Beef Sausage Roll (4-star 100% seasonal beef)", 
+                {   name: "Beef Sausage Roll", 
                     price: 5.00, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://img.taste.com.au/ZbSnQZc1/taste/2016/11/beef-sausage-rolls-13020-1.jpeg" 
                 },
                 {   name: "Spinach & Feta Roll", 
                     price: 5.00, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSkuDDZsn26EAwDbWUWhtNPhrgjaJAJSvZoTg&s" 
                 },
-                {   name: "Beef Pie (4-star 100% minced lean beef)", 
+                {   name: "Beef Pie", 
                     price: 5.00, 
-                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                    image: "https://www.frugalandthriving.com.au/wp-content/uploads/2009/05/beef-pie-540x720.jpg" 
                 },
             ],
             "panini rolls": [
                 {   name: "BLT (bacon cheese lettuce tomato bbq sauce)", 
                     price: 7.00, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://breaddad.com/wp-content/uploads/2024/09/BLT-panini-sandwich-21.jpg" 
                 },
-                {   name: "Spicy Chicken Spicy Chicken", 
+                {   name: "Spicy Chicken", 
                     price: 7.00, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://homecookingmemories.com/wp-content/uploads/2014/04/Buffalo-Chicken-Panini-4.jpg" 
                 },
                 {   name: "Chicken Schnitzel (crumbed chicken cheese lettuce tomato mayo)", 
                     price: 7.00, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://img.taste.com.au/lr7zcL5R/taste/2016/11/chicken-schnitzel-caesar-sandwich-98267-1.jpeg" 
                 },
             ],
             snacks: [
                 {   name: "Seasonal Fruit", 
                     price: 1.50, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT3s1hmbRCGYr0dpP2KcWO0c0NaHga0IQSoaQ&s" 
                 },
                 {   name: "Popcorn",    
                     price: 2.50, 
-                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                    image: "https://joyfoodsunshine.com/wp-content/uploads/2023/04/homemade-butter-popcorn-recipe-1-500x500.jpg" 
                 },
                 {   name: "Red Rock Chips",     
                     price: 2.80, 
-                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                    image: "https://www.redrockdeli.com.au/prod/s3fs-public/2022-06/10generousupdatedimage_0.png" 
                 },
                 {   name: "Garlic Bread", 
                     price: 2.50, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTXPxyKHrY5nsgmdFRuGHpZhJuvZI1vvhAmg&s" 
                 },
-                {   name: "Gourmet Muffins", 
+                {   name: "Muffins", 
                     price: 5.00, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPh_KeFHWtLtFQKlGTGHPNMsztcZTF-RDtDg&s" 
                 },
             ],
             "gluten free": [
                 {   name: "Potato Bake", 
                     price: 6.50, 
-                    image: "https://images.unsplash.com/photo-1518013431117-eb1465fa5752?w=400" 
+                    image: "https://www.onelovelylife.com/wp-content/uploads/2023/11/Scalloped-Potatoes12-4.jpg" 
                 },
                 {   name: "Fried Rice", 
                     price: 6.50, 
-                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                    image: "https://jessicasglutenfreekitchen.com/wp-content/uploads/2020/05/06DBE728-6DFF-4AE0-A2D7-3EA221910B33.jpeg" 
                 },
                 {   name: "Butter Chicken", 
                     price: 6.50, 
-                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                    image: "https://i0.wp.com/offthewheatenpathtt.com/wp-content/uploads/2020/03/Butter-Chicken-10-of-16.jpg?fit=768%2C1024&ssl=1" 
                 },
                 {   name: "Chicken Tender Wrap", 
                     price: 6.50, 
-                    image: "https://images.unsplash.com/photo-1518013431１１７-eb１４６5fa５７５２?w=4００" 
+                    image: "https://unboundwellness.com/wp-content/uploads/2023/07/snack_wrap_2.jpg" 
                 },
             ],
 
@@ -864,12 +1032,16 @@
 
         let cart = [];
         let total = 0;
+        let inactivityTimer;
+        let countdownTimer;
+        let countdown = 10;
 
         function startOrdering() {
         document.getElementById('startScreen').style.display = 'none';
         document.getElementById('menuScreen').classList.add('active');
         document.getElementById('cartTotal').classList.add('active');
         displayCategories();
+        startInactivityTimer();
         }
 
         function backToStart() {
@@ -939,8 +1111,11 @@
                 html += '<p>No items available</p>';
             } else {
                 items.forEach(item => {
+
+                    const itemId = item.name.replace(/\s/g, '');
+
                     html += `
-                        <div class="item">
+                        <div class="item" onclick="toggleQuantity('${itemId}')">
 
                             <img src="${item.image}" alt="${item.name}">
 
@@ -950,16 +1125,82 @@
                                     ${item.name}
                                 </div>
 
-                                <div class="item-bottom">
+                                <div class="item-price">
+                                    $${item.price.toFixed(2)}
+                                </div>
 
-                                    <div class="item-price">
-                                        $${item.price.toFixed(2)}
+                                <div class="quantity-popup"
+                                    id="popup-${itemId}"
+                                    onclick="event.stopPropagation()">
+
+                                        ${item.flavours ? `
+                                            <div style="margin-bottom:15px;">
+                                                <label style="font-weight:bold; display:block; margin-bottom:8px;">
+                                                    Choose a flavour:
+                                                </label>
+
+                                                <select id="flavour-${itemId}"
+                                                    style="
+                                                        width:100%;
+                                                        padding:10px;
+                                                        border-radius:6px;
+                                                        border:1px solid #ccc;
+                                                        font-size:16px;
+                                                    ">
+                                                    ${item.flavours.map(flavour => `
+                                                        <option value="${flavour}">
+                                                            ${flavour}
+                                                        </option>
+                                                    `).join('')}
+                                                </select>
+                                            </div>
+                                        ` : ''}
+
+                                    <p class="quantity-text">
+                                        How many items do you want to order?
+                                    </p>
+
+                                    <div class="quantity-controls">
+
+                                        <button class="qty-btn"
+                                            onclick="event.stopPropagation(); changeQuantity(
+                                                '${item.name}',
+                                                ${item.price},
+                                                -1,
+                                                '${itemId}'
+                                            )">
+                                            -
+                                        </button>
+
+                                        <span class="qty-number" id="qty-${itemId}">
+                                            0
+                                        </span>
+
+                                        <button class="qty-btn"
+                                            onclick="event.stopPropagation(); changeQuantity(
+                                                '${item.name}',
+                                                ${item.price},
+                                                1,
+                                                '${itemId}'
+                                            )">
+                                            +
+                                        </button>
+
                                     </div>
 
-                                    <button class="add-btn"
-                                        onclick="addToCart('${item.name}', ${item.price})">
-                                        Add
-                                    </button>
+                                    <div class="popup-actions">
+
+                                        <button class="popup-btn confirm-btn"
+                                            onclick="event.stopPropagation(); confirmItem('${itemId}')">
+                                            Confirm
+                                        </button>
+                                        
+                                        <button class="popup-btn cancel-btn"
+                                            onclick="event.stopPropagation(); cancelItem('${itemId}')">
+                                            Cancel
+                                        </button>
+
+                                    </div>
 
                                 </div>
 
@@ -977,12 +1218,47 @@
 
             container.innerHTML = html;
 
-            document.getElementById('overlay').classList.add('active');
+            const overlay = document.getElementById('overlay');
+            overlay.classList.add('active');
+        }
+
+        function toggleQuantity(itemId) {
+
+            const popup =
+                document.getElementById(`popup-${itemId}`);
+
+            const overlay =
+                document.getElementById('overlay');
+
+            const allPopups =
+                document.querySelectorAll('.quantity-popup');
+
+            // Hide all other popups
+            allPopups.forEach(p => {
+                if (p !== popup) {
+                    p.style.display = 'none';
+                }
+            });
+
+            // Toggle current popup
+            if (popup.style.display === 'block') {
+
+                popup.style.display = 'none';
+                overlay.classList.remove('active');
+
+            } else {
+
+                popup.style.display = 'block';
+                popup.scrollIntoView({ block: 'center' });
+                overlay.classList.add('active');
+            }
         }
 
         function closeMenu() {
             document.getElementById('itemsContainer').innerHTML = '';
-            document.getElementById('overlay').classList.remove('active');
+
+            const overlay = document.getElementById('overlay');
+            overlay.classList.remove('active');
         }
 
         function addToCart(itemName, itemPrice) {
@@ -994,6 +1270,22 @@
             updateCart();
         }
         
+        function changeQuantity(itemName, itemPrice, change, itemId) {
+
+            const qtyElement =
+                document.getElementById(`qty-${itemId}`);
+
+            let quantity = parseInt(qtyElement.textContent);
+
+            quantity += change;
+
+            if (quantity < 0) {
+                quantity = 0;
+            }
+
+            qtyElement.textContent = quantity;
+        }
+
         function updateCart() {
             document.getElementById('cartTotal').textContent =
                 `Total: $${total.toFixed(2)}`;
@@ -1066,33 +1358,420 @@
         }
 
         function confirmOrder() {
+
+            // Stop checkout if cart is empty
+            if (cart.length === 0) {
+
+                document.getElementById('emptyCartPopup').style.display = 'flex';
+
+                return;
+            }
+
             document.getElementById('paymentPopup').style.display = 'flex';
+
+            // Reset payment popup content with back button
+            document.querySelector('.payment-box').innerHTML = `
+                <button class="popup-back-btn"
+                    onclick="backToCheckout()">
+                    ← Back
+                </button>
+
+                <h2>Select Payment Method</h2>
+
+                <button class="payment-btn card-btn"
+                    onclick="selectPayment('card')">
+                    Pay with Card
+                </button>
+
+                <button class="payment-btn counter-btn"
+                    onclick="selectPayment('counter')">
+                    Pay at Counter
+                </button>
+            `;
+        }
+
+        function backToCheckout() {
+
+            // Close payment popup
+            document.getElementById('paymentPopup').style.display = 'none';
+
+            // Keep checkout screen visible
+            document.getElementById('checkoutScreen')
+                .classList.add('active');
+
+            // Keep checkout buttons visible
+            document.getElementById('menuButtons').style.display = 'none';
+            document.getElementById('checkoutActions').style.display = 'flex';
         }
 
         function selectPayment(method) {
-            if (method === 'online') {
-                alert("Redirecting to online payment...");
+
+            const paymentBox = document.querySelector('.payment-box');
+
+            if (method === 'card') {
+
+                paymentBox.innerHTML = `
+                    <h2>Please Tap Card</h2>
+
+                    <img 
+                        src="https://cdn-icons-png.flaticon.com/512/2489/2489756.png"
+                        alt="Card Scanner"
+                        style="
+                            width:120px;
+                            margin:20px 0;
+                        "
+                    >
+
+                    <p id="paymentStatus"
+                        style="
+                            font-size:18px;
+                            margin-bottom:25px;
+                        ">
+                        Waiting for card...
+                    </p>
+
+                    <button class="payment-btn cancel-btn"
+                        onclick="cancelPayment()">
+                        Cancel Payment
+                    </button>
+                `;
+
+                setTimeout(() => {
+
+                    const status =
+                        document.getElementById('paymentStatus');
+
+                    if (status) {
+                        status.textContent =
+                            "Cannot detect card, please try again.";
+                    }
+
+                }, 10000);
+
             } else {
-                alert("Order Confirmed! Please pay at the counter.");
+
+                paymentBox.innerHTML = `
+                    <h2>Processing Order...</h2>
+
+                    <p style="
+                        font-size: 20px;
+                        margin: 30px 0;
+                        color: #333;
+                    ">
+                        Please wait...
+                    </p>
+                `;
+
+                setTimeout(() => {
+
+                    currentOrderNumber =
+                        Math.floor(1000 + Math.random() * 9000);
+
+                    paymentBox.innerHTML = `
+                        <h2>Order Confirmed</h2>
+
+                        <p style="
+                            font-size: 24px;
+                            font-weight: bold;
+                            margin: 20px 0;
+                            color: #4CAF50;
+                        ">
+                            Order #${currentOrderNumber}
+                        </p>
+
+                        <p style="
+                            font-size: 18px;
+                            line-height: 1.5;
+                            margin-bottom: 25px;
+                        ">
+                            Please go to the counter and pay for your order
+                            for it to be prepared.
+                        </p>
+
+                        <button class="payment-btn counter-btn"
+                            onclick="finishCounterOrder()">
+                            Done
+                        </button>
+                    `;
+
+                }, 3000);
             }
+        }
+
+        function cancelPayment() {
+
             document.getElementById('paymentPopup').style.display = 'none';
-            
-            
+
+            // Restore original popup
+            document.querySelector('.payment-box').innerHTML = `
+                <button class="popup-back-btn"
+                    onclick="backToCheckout()">
+                    ← Back
+                </button>
+
+                <h2>Select Payment Method</h2>
+
+                <button class="payment-btn card-btn"
+                    onclick="selectPayment('card')">
+                    Card Payment
+                </button>
+
+                <button class="payment-btn counter-btn"
+                    onclick="selectPayment('counter')">
+                    Pay at Counter
+                </button>
+            `;
+        }
+        let currentOrderNumber = null;
+
+        function finishCounterOrder() {
+
+            fetch("https://script.google.com/macros/s/AKfycby1lvqRYSss_Dz-A8hdA1mKplp3mI7tiibxzcfP32hnoFh8jWWEHnIZ2XYKcmlz-qP5/exec", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    orderNumber: currentOrderNumber,
+                    items: cart.map(item => item.name).join(", "),
+                    total: total.toFixed(2),
+                    paymentMethod: "Counter"
+                })
+            })
+            .then(response => response.text())
+            .then(data => {
+                console.log("Order saved:", data);
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+
+            // Hide payment popup
+            document.getElementById('paymentPopup').style.display = 'none';
+
+            // Reset cart data
             cart = [];
             total = 0;
-            
-            
+
             updateCart();
-            keepOrdering();
         }
+
+        function closeAllPopups() {
+
+            document.querySelectorAll('.quantity-popup')
+                .forEach(popup => {
+                    popup.style.display = 'none';
+                });
+
+            document.getElementById('overlay')
+                .classList.remove('active');
+        }
+
+        function confirmItem(itemId) {
+
+            const quantity =
+                parseInt(document.getElementById(`qty-${itemId}`).textContent);
+
+            if (quantity <= 0) {
+                return;
+            }
+
+            // Find item data
+            let selectedItem;
+
+            Object.values(menuData).forEach(category => {
+                category.forEach(item => {
+
+                    const currentId =
+                        item.name.replace(/\s/g, '');
+
+                    if (currentId === itemId) {
+                        selectedItem = item;
+                    }
+                });
+            });
+
+            if (!selectedItem) return;
+
+            let finalName = selectedItem.name;
+
+            const flavourSelect =
+                document.getElementById(`flavour-${itemId}`);
+
+            if (flavourSelect) {
+                finalName = flavourSelect.value;
+            }
+
+            // Add quantity to cart
+            for (let i = 0; i < quantity; i++) {
+
+                cart.push({
+                    id: finalName,
+                    name: finalName,
+                    price: selectedItem.price
+                });
+
+                total += selectedItem.price;
+            }
+
+            updateCart();
+
+            // Reset popup quantity
+            document.getElementById(`qty-${itemId}`).textContent = 0;
+
+            // Close popup
+            document.getElementById(`popup-${itemId}`).style.display = 'none';
+        }
+
+        function cancelItem(itemId) {
+
+            document.getElementById(`qty-${itemId}`).textContent = 0;
+
+            document.getElementById(`popup-${itemId}`).style.display = 'none';
+        }
+
+        function startInactivityTimer() {
+
+            clearTimeout(inactivityTimer);
+
+            inactivityTimer = setTimeout(() => {
+
+                showInactivePopup();
+
+            }, 60000); // 60 seconds
+        }
+
+        function showInactivePopup() {
+
+            document.getElementById('inactivePopup').style.display = 'flex';
+
+            countdown = 10;
+
+            document.getElementById('countdown').textContent = countdown;
+
+            countdownTimer = setInterval(() => {
+
+                countdown--;
+
+                document.getElementById('countdown').textContent = countdown;
+
+                if (countdown <= 0) {
+
+                    clearInterval(countdownTimer);
+
+                    resetSystem();
+                }
+
+            }, 1000);
+        }
+
+        function stayActive() {
+
+            document.getElementById('inactivePopup').style.display = 'none';
+
+            clearInterval(countdownTimer);
+
+            startInactivityTimer();
+        }
+
+        function resetSystem() {
+
+            clearTimeout(inactivityTimer);
+
+            clearInterval(countdownTimer);
+
+            document.getElementById('inactivePopup').style.display = 'none';
+
+            // Reset cart
+            cart = [];
+            total = 0;
+
+            updateCart();
+
+            // Reset quantity displays
+            document.querySelectorAll('.qty-number').forEach(qty => {
+                qty.textContent = 0;
+            });
+
+            // Close popups
+            closeMenu();
+            closeAllPopups();
+
+            // Hide payment popup
+            document.getElementById('paymentPopup').style.display = 'none';
+
+            // Hide inactivity popup
+            document.getElementById('inactivePopup').style.display = 'none';
+
+            // Hide empty cart popup
+            document.getElementById('emptyCartPopup').style.display = 'none';
+
+            // Remove overlay
+            document.getElementById('overlay').classList.remove('active');
+
+            // Reset checkout screen
+            document.getElementById('checkoutScreen')
+                .classList.remove('active');
+
+            // Reset buttons
+            document.getElementById('menuButtons').style.display = 'flex';
+            document.getElementById('checkoutActions').style.display = 'none';
+
+            // Show categories again
+            document.getElementById('categories').style.display = 'grid';
+            document.getElementById('itemsContainer').style.display = 'block';
+
+            // Rebuild categories
+            displayCategories();
+            
+            // Hide menu
+            document.getElementById('menuScreen')
+                .classList.remove('active');
+
+            // Show start page
+            document.getElementById('startScreen')
+                .style.display = 'flex';
+
+            // Restore original payment popup
+            document.querySelector('.payment-box').innerHTML = `
+                <h2>Select Payment Method</h2>
+
+                <button class="payment-btn card-btn"
+                    onclick="selectPayment('card')">
+                    Pay with Card
+                </button>
+
+                <button class="payment-btn counter-btn"
+                    onclick="selectPayment('counter')">
+                    Pay at Counter
+                </button>
+            `;
+        }
+        
+        // Detect user activity ONLY when ordering screen is open
+        ['click', 'mousemove', 'keypress', 'touchstart'].forEach(event => {
+
+            document.addEventListener(event, () => {
+
+                const menuScreen =
+                    document.getElementById('menuScreen');
+
+                if (menuScreen.classList.contains('active')) {
+                    startInactivityTimer();
+                }
+
+            });
+
+        });
+
     </script>
     
     <div id="paymentPopup" class="payment-popup">
         <div class="payment-box">
             <h2>Select Payment Method</h2>
-            <button class="payment-btn online-btn"
-                onclick="selectPayment('online')">
-                Pay Online
+            <button class="payment-btn card-btn"
+                onclick="selectPayment('card')">
+                Pay with Card
             </button>
             <button class="payment-btn counter-btn"
                 onclick="selectPayment('counter')">
@@ -1101,7 +1780,51 @@
         </div>
     </div>
     
-    <div id="overlay" class="overlay" onclick="closeMenu()"></div>
+    <div id="overlay" class="overlay" onclick="closeAllPopups(); closeMenu();"></div>
 
+    <div id="inactivePopup" class="payment-popup">
+        <div class="payment-box">
+            <h2>Are you still ordering?</h2>
+
+            <p style="font-size:18px; margin:20px 0;">
+                Returning to start page in
+                <span id="countdown">10</span> seconds
+            </p>
+
+            <div style="display:flex; gap:15px; justify-content:center;">
+                <button class="payment-btn cancel-btn"
+                    style="width:140px;"
+                    onclick="resetSystem()">
+                    No
+                </button>
+
+                <button class="payment-btn counter-btn"
+                    style="width:140px;"
+                    onclick="stayActive()">
+                    Yes
+                </button>
+            </div>
+        </div>
+    </div>
+            
+    <div id="emptyCartPopup" class="payment-popup">
+
+        <div class="empty-cart-box">
+
+            <h2>Cart Empty</h2>
+
+            <p>
+                Your cart is empty.<br>
+                Please add items before confirming your order.
+            </p>
+
+            <button class="empty-cart-btn"
+                onclick="document.getElementById('emptyCartPopup').style.display='none'">
+                Okay
+            </button>
+
+        </div>
+
+    </div>
 </body>  
 </html>
