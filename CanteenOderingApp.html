@@ -210,7 +210,6 @@
 
         .quantity-popup {
             display: none;
-
             position: fixed;
 
             top: 50%;
@@ -537,12 +536,16 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.5);
+            background-color: transparent;
 
             justify-content: center;
             align-items: center;
 
             z-index: 10000;
+        }
+
+        #inactivePopup {
+            z-index: 10001;
         }
 
         .payment-box {
@@ -657,6 +660,31 @@
             background-color: #0b7dda;
         }
 
+        .searchContainer {
+            width: 100%;
+            padding: 15px 20px;
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-sizing: border-box;
+        }
+
+        #searchBar {
+            width: 100%;
+            padding: 14px 18px;
+            font-size: 18px;
+            border-radius: 12px;
+            border: 2px solid #ddd;
+            outline: none;
+            box-sizing: border-box;
+            transition: 0.2s;
+        }
+
+        #searchBar:focus {
+            border-color: #4CAF50;
+        }
+
     </style>
 </head>
 <body>
@@ -699,6 +727,17 @@
 
             </div> <!-- closes checkoutActions -->
         </div> <!-- closes bottom-bar -->
+
+        <div class="searchContainer" id="searchContainer">
+
+            <input 
+                type="text"
+                id="searchBar"
+                placeholder="Search for food or drinks..."
+                onkeyup="searchItems()"
+            >
+
+        </div>
 
         <div class="categories" id="categories"></div>
         <div id="itemsContainer"></div>
@@ -799,12 +838,24 @@
                 }
             ],
             sushi: [
-                {   name: "Sushi (california/tuna/salmon/ chicken/beef)", 
+                {   name: "Sushi", 
                     price: 4.50, 
+                    flavours: [
+                        "California",
+                        "Tuna",
+                        "Salmon",
+                        "Chicken",
+                        "Beef"
+                    ],
                     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRifnY42eeOuXzGKKvv6Qm27pZb_Kq_mWz42Q&s" 
                 },
-                {   name: "Rice Paper Rolls 2 pcs (bbq chicken/pork/vegetarian)", 
+                {   name: "Rice Paper Rolls 2 pcs", 
                     price: 7.50, 
+                    flavours: [
+                        "BBQ Chicken",
+                        "BBQ Pork",
+                        "Vegetarian"
+                    ],
                     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQuG8B-MdlkpZgUA-9Izn4myS_RNHu_8RsQAQ&s" 
                 },
                 {   name: "Sashimi Salmon Nigiri Pack (4x salmon)", 
@@ -996,12 +1047,12 @@
                 {   name: "Muffins", 
                     price: 5.00, 
                     flavours: [
-                        "Blueberry Muffin",
-                        "Chocolate Chip Muffin",
-                        "Banana Nut Muffin",
-                        "Apple Cinnamon Muffin",
-                        "Lemon Poppy Seed Muffin",
-                        "Pumpkin Spice Muffin"
+                        "Blueberry",
+                        "Chocolate Chip",
+                        "Banana Nut",
+                        "Apple Cinnamon",
+                        "Lemon Poppy Seed",
+                        "Pumpkin Spice"
                     ],
                     image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPh_KeFHWtLtFQKlGTGHPNMsztcZTF-RDtDg&s" 
                 },
@@ -1037,6 +1088,23 @@
                 "gluten free": "https://images.unsplash.com/photo-1723910065922-67b84af65b23?w=400&q=70"
             };
 
+        const MAX_STOCK = 10;
+        const INACTIVITY_TIME = 30000; //30 seconds
+        const itemLookup = {};
+
+        Object.values(menuData).forEach(category => {
+
+            category.forEach(item => {
+
+                const itemId =
+                    item.name.replace(/\s/g, '');
+
+                itemLookup[itemId] = item;
+
+            });
+
+        });
+
         let cart = [];
         let total = 0;
         let inactivityTimer;
@@ -1044,10 +1112,41 @@
         let countdown = 10;
         let currentOrderNumber = 1000;
 
+        const $ = id => document.getElementById(id);
+        
+        function show(id, display = 'block') {
+            const element = $(id);
+
+            if (!element) {
+                console.error(`Element not found: ${id}`);
+                return;
+            }
+
+            element.style.display = display;
+        }
+
+        function hide(id) {
+            const element = $(id);
+
+            if (!element) {
+                console.error(`Element not found: ${id}`);
+                return;
+            }
+
+            element.style.display = 'none';
+        }
+
+        function formatCategory(category) {
+            return category.charAt(0).toUpperCase() +
+                   category.slice(1);
+        }
+
         function startOrdering() {
-        document.getElementById('startScreen').style.display = 'none';
-        document.getElementById('menuScreen').classList.add('active');
-        document.getElementById('cartTotal').classList.add('active');
+        hide('startScreen');
+        document.getElementById('menuScreen')
+            .classList.add('active');
+        document.getElementById('cartTotal')
+            .classList.add('active');
         displayCategories();
         startInactivityTimer();
         }
@@ -1061,12 +1160,14 @@
 
                 checkoutScreen.classList.remove('active');
 
-                document.getElementById('categories').style.display = 'grid';
-                document.getElementById('itemsContainer').style.display = 'block';
+                show('searchContainer');
+
+                show('categories', 'grid');
+                show('itemsContainer');
 
                 // FIXES BOTTOM BAR
-                document.getElementById('menuButtons').style.display = 'flex';
-                document.getElementById('checkoutActions').style.display = 'none';
+                show('menuButtons', 'flex');
+                hide('checkoutActions');
 
             } else {
 
@@ -1087,14 +1188,118 @@
                 btn.style.backgroundImage =
                     `url('${categoryImages[category]}')`;
                 btn.innerHTML =
-                    `<span>${
-                        category.charAt(0).toUpperCase() +
-                        category.slice(1)
-                    }</span>`;
+                    `<span>${formatCategory(category)}</span>`;
 
                 btn.onclick = () => displayItems(category);
                 container.appendChild(btn);
             });
+        }
+
+        function createItemHTML(item) {
+
+            const itemId = item.name.replace(/\s/g, '');
+                
+            return `
+                <div class="item"
+                    onclick="toggleQuantity('${itemId}')">
+
+                    <img src="${item.image}"
+                        alt="${item.name}">
+
+                    <div class="item-content">
+
+                        <div class="item-name">
+                            ${item.name}
+                        </div>
+
+                        <div class="item-price">
+                            $${item.price.toFixed(2)}
+                        </div>
+
+                        <div class="quantity-popup"
+                            id="popup-${itemId}"
+                            onclick="event.stopPropagation()">
+
+                            ${item.flavours ? `
+                                <div style="margin-bottom:15px;">
+                                    <label style="
+                                        font-weight:bold;
+                                        display:block;
+                                        margin-bottom:8px;
+                                    ">
+                                        Choose a flavour:
+                                    </label>
+
+                                    <select id="flavour-${itemId}"
+                                        style="
+                                            width:100%;
+                                            padding:10px;
+                                            border-radius:6px;
+                                            border:1px solid #ccc;
+                                            font-size:16px;
+                                        ">
+                                        ${item.flavours.map(flavour => `
+                                            <option value="${flavour}">
+                                                ${flavour}
+                                            </option>
+                                        `).join('')}
+                                    </select>
+                                </div>
+                            ` : ''}
+
+                            <p class="quantity-text">
+                                How many items do you want to order?
+                            </p>
+
+                            <div class="quantity-controls">
+
+                                <button class="qty-btn"
+                                    onclick="event.stopPropagation(); changeQuantity(
+                                        '${item.name}',
+                                        ${item.price},
+                                        -1,
+                                        '${itemId}'
+                                    )">
+                                    -
+                                </button>
+
+                                <span class="qty-number"
+                                    id="qty-${itemId}">
+                                    1
+                                </span>
+
+                                <button class="qty-btn"
+                                    onclick="event.stopPropagation(); changeQuantity(
+                                        '${item.name}',
+                                        ${item.price},
+                                        1,
+                                        '${itemId}'
+                                    )">
+                                    +
+                                </button>
+
+                            </div>
+
+                            <div class="popup-actions">
+
+                                <button class="popup-btn confirm-btn"
+                                    onclick="event.stopPropagation(); confirmItem('${itemId}')">
+                                    Confirm
+                                </button>
+
+                                <button class="popup-btn cancel-btn"
+                                    onclick="event.stopPropagation(); cancelItem('${itemId}')">
+                                    Cancel
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            `;
         }
 
         function displayItems(category) {
@@ -1109,7 +1314,7 @@
                     </button>
 
                     <h2>
-                        ${category.charAt(0).toUpperCase() + category.slice(1)}
+                        ${formatCategory(category)}
                     </h2>
 
                     <div class="items">
@@ -1119,103 +1324,7 @@
                 html += '<p>No items available</p>';
             } else {
                 items.forEach(item => {
-
-                    const itemId = item.name.replace(/\s/g, '');
-
-                    html += `
-                        <div class="item" onclick="toggleQuantity('${itemId}')">
-
-                            <img src="${item.image}" alt="${item.name}">
-
-                            <div class="item-content">
-
-                                <div class="item-name">
-                                    ${item.name}
-                                </div>
-
-                                <div class="item-price">
-                                    $${item.price.toFixed(2)}
-                                </div>
-
-                                <div class="quantity-popup"
-                                    id="popup-${itemId}"
-                                    onclick="event.stopPropagation()">
-
-                                        ${item.flavours ? `
-                                            <div style="margin-bottom:15px;">
-                                                <label style="font-weight:bold; display:block; margin-bottom:8px;">
-                                                    Choose a flavour:
-                                                </label>
-
-                                                <select id="flavour-${itemId}"
-                                                    style="
-                                                        width:100%;
-                                                        padding:10px;
-                                                        border-radius:6px;
-                                                        border:1px solid #ccc;
-                                                        font-size:16px;
-                                                    ">
-                                                    ${item.flavours.map(flavour => `
-                                                        <option value="${flavour}">
-                                                            ${flavour}
-                                                        </option>
-                                                    `).join('')}
-                                                </select>
-                                            </div>
-                                        ` : ''}
-
-                                    <p class="quantity-text">
-                                        How many items do you want to order?
-                                    </p>
-
-                                    <div class="quantity-controls">
-
-                                        <button class="qty-btn"
-                                            onclick="event.stopPropagation(); changeQuantity(
-                                                '${item.name}',
-                                                ${item.price},
-                                                -1,
-                                                '${itemId}'
-                                            )">
-                                            -
-                                        </button>
-
-                                        <span class="qty-number" id="qty-${itemId}">
-                                            1
-                                        </span>
-
-                                        <button class="qty-btn"
-                                            onclick="event.stopPropagation(); changeQuantity(
-                                                '${item.name}',
-                                                ${item.price},
-                                                1,
-                                                '${itemId}'
-                                            )">
-                                            +
-                                        </button>
-
-                                    </div>
-
-                                    <div class="popup-actions">
-
-                                        <button class="popup-btn confirm-btn"
-                                            onclick="event.stopPropagation(); confirmItem('${itemId}')">
-                                            Confirm
-                                        </button>
-                                        
-                                        <button class="popup-btn cancel-btn"
-                                            onclick="event.stopPropagation(); cancelItem('${itemId}')">
-                                            Cancel
-                                        </button>
-
-                                    </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-                    `;
+                    html += createItemHTML(item);
                 });
             }
 
@@ -1226,7 +1335,7 @@
 
             container.innerHTML = html;
 
-            const overlay = document.getElementById('overlay');
+            const overlay = $('overlay');
             overlay.classList.add('active');
         }
 
@@ -1236,7 +1345,7 @@
                 document.getElementById(`popup-${itemId}`);
 
             const overlay =
-                document.getElementById('overlay');
+                $('overlay');
 
             const allPopups =
                 document.querySelectorAll('.quantity-popup');
@@ -1265,8 +1374,20 @@
         function closeMenu() {
             document.getElementById('itemsContainer').innerHTML = '';
 
-            const overlay = document.getElementById('overlay');
+            const overlay = $('overlay');
             overlay.classList.remove('active');
+        }
+
+        function closeSearchResults() {
+
+            document.getElementById('itemsContainer')
+                .innerHTML = '';
+
+            document.getElementById('searchBar')
+                .value = '';
+
+            $('overlay')
+                .classList.remove('active');
         }
 
         function addToCart(itemName, itemPrice) {
@@ -1420,9 +1541,11 @@
             const item = cart[index];
 
             // STOCK LIMIT
-            if (item.quantity >= 10) {
+            if (item.quantity >= MAX_STOCK) {
 
-                showStockPopup("Maximum stock limit reached.");
+                showStockPopup(
+                    `Maximum quantity is ${MAX_STOCK}.`
+                );
 
                 return;
             }
@@ -1452,26 +1575,30 @@
 
         function showCheckout() {
 
-            document.getElementById('categories').style.display = 'none';
-            document.getElementById('itemsContainer').style.display = 'none';
-            document.getElementById('checkoutScreen').classList.add('active');
+            hide('searchContainer'); // Hide search bar
 
-            // Switch bottom bar buttons
-            document.getElementById('menuButtons').style.display = 'none';
-            document.getElementById('checkoutActions').style.display = 'flex';
+            hide('categories');
+            hide('itemsContainer');
+
+            $('checkoutScreen').classList.add('active');
+
+            hide('menuButtons');
+            show('checkoutActions', 'flex');
 
             updateCart();
         }
 
         function keepOrdering() {
 
-            document.getElementById('categories').style.display = 'grid';
-            document.getElementById('itemsContainer').style.display = 'block';
-            document.getElementById('checkoutScreen').classList.remove('active');
+            show('searchContainer'); // Show search bar again
 
-            // Switch buttons back
-            document.getElementById('menuButtons').style.display = 'flex';
-            document.getElementById('checkoutActions').style.display = 'none';
+            show('categories', 'grid');
+            show('itemsContainer');
+
+            $('checkoutScreen').classList.remove('active');
+
+            show('menuButtons', 'flex');
+            hide('checkoutActions');
         }
 
         function confirmOrder() {
@@ -1484,8 +1611,11 @@
                 return;
             }
 
-            document.getElementById('paymentPopup').style.display = 'flex';
+            $('overlay')
+                .classList.add('active');
 
+            show('paymentPopup', 'flex');
+            
             // Reset payment popup content with back button
             document.querySelector('.payment-box').innerHTML = `
                 <button class="popup-back-btn"
@@ -1510,7 +1640,11 @@
         function backToCheckout() {
 
             // Close payment popup
-            document.getElementById('paymentPopup').style.display = 'none';
+            $('overlay')
+                .classList.remove('active');
+
+            document.getElementById('paymentPopup')
+                .style.display = 'none';
 
             // Keep checkout screen visible
             document.getElementById('checkoutScreen')
@@ -1580,7 +1714,7 @@
                 `;
 
                 // FETCH RUNS IMMEDIATELY
-                fetch("https://script.google.com/macros/s/AKfycbxNdvbS64KkwWM8HKBfqlZnL8UBzfssW1dOqmzHVlaIyfZRnAhcVVtqO_cXj8Wyk4eB/exec", {
+                fetch("https://script.google.com/macros/s/AKfycbxa9Ndrew_j4xLmd9xNu6-QyLE7XQ5rP-jwrOcjQ90T-6OCNaVq1HKT3BzIvvc8pT8_/exec", {
                     method: "POST",
 
                     body: JSON.stringify({
@@ -1616,7 +1750,17 @@
                             Order #${currentOrderNumber}
                         </p>
 
-                        <button class="payment-btn counter-btn"
+                        <p style="
+                            font-size:18px;
+                            line-height:1.5;
+                            margin-bottom:25px;
+                            color:#333;
+                        ">
+                            Please go to the counter and pay for your order
+                            for it to be prepared.
+                        </p>
+
+                            <button class="payment-btn counter-btn"
                             onclick="resetSystem()">
                             Done
                         </button>
@@ -1633,7 +1777,10 @@
 
         function cancelPayment() {
 
-            document.getElementById('paymentPopup').style.display = 'none';
+            $('overlay')
+                .classList.remove('active');
+
+            hide('paymentPopup');
 
             // Restore original popup
             document.querySelector('.payment-box').innerHTML = `
@@ -1663,7 +1810,7 @@
                     popup.style.display = 'none';
                 });
 
-            document.getElementById('overlay')
+            $('overlay')
                 .classList.remove('active');
         }
 
@@ -1677,27 +1824,17 @@
             }
 
             // STOCK LIMIT
-            if (quantity > 10) {
+            if (quantity > MAX_STOCK) {
 
-                showStockPopup("Maximum quantity is 10.");
+                showStockPopup(
+                    `Maximum quantity is ${MAX_STOCK}.`
+                );
 
                 quantity = 10;
             }
 
             // Find item data
-            let selectedItem;
-
-            Object.values(menuData).forEach(category => {
-                category.forEach(item => {
-
-                    const currentId =
-                        item.name.replace(/\s/g, '');
-
-                    if (currentId === itemId) {
-                        selectedItem = item;
-                    }
-                });
-            });
+            const selectedItem = itemLookup[itemId];
 
             if (!selectedItem) return;
 
@@ -1707,20 +1844,25 @@
                 document.getElementById(`flavour-${itemId}`);
 
             if (flavourSelect) {
-                finalName = flavourSelect.value;
+
+                finalName =
+                    `${selectedItem.name} - ${flavourSelect.value}`;
             }
 
             // Check if item already exists in cart
-            const existingItem = cart.find(item => item.id === finalName);
-
+            const existingItem = cart.find(item => item.id === finalName);            
+            
             if (existingItem) {
 
-                // Increase quantity
+                if (existingItem.quantity + quantity > MAX_STOCK) {
+                    showStockPopup(`Maximum quantity is ${MAX_STOCK}.`);
+                    return;
+                }
+
                 existingItem.quantity += quantity;
 
             } else {
 
-                // Add new item
                 cart.push({
                     id: finalName,
                     name: finalName,
@@ -1756,12 +1898,14 @@
 
                 showInactivePopup();
 
-            }, 60000); // 60 seconds
+            }, INACTIVITY_TIME); // what ever time Inacitivy time is set to
         }
 
         function showInactivePopup() {
 
-            document.getElementById('inactivePopup').style.display = 'flex';
+             $('overlay').classList.add('active');
+
+            show('inactivePopup', 'flex');
 
             countdown = 10;
 
@@ -1785,7 +1929,9 @@
 
         function stayActive() {
 
-            document.getElementById('inactivePopup').style.display = 'none';
+            hide('inactivePopup');
+
+            $('overlay').classList.remove('active');
 
             clearInterval(countdownTimer);
 
@@ -1825,7 +1971,7 @@
             document.getElementById('emptyCartPopup').style.display = 'none';
 
             // Remove overlay
-            document.getElementById('overlay').classList.remove('active');
+            $('overlay').classList.remove('active');
 
             // Reset checkout screen
             document.getElementById('checkoutScreen')
@@ -1864,6 +2010,7 @@
                     Pay at Counter
                 </button>
             `;
+            show('searchContainer');
         }
         
         // Detect user activity ONLY when ordering screen is open
@@ -1887,33 +2034,139 @@
             document.getElementById('stockPopupText').textContent =
                 message;
 
-            document.getElementById('stockPopup').style.display =
-                'flex';
+            show('stockPopup', 'flex');
         }
 
         function closeStockPopup() {
 
-            document.getElementById('stockPopup').style.display =
-                'none';
+            hide('stockPopup');
+        }
+
+        function searchItems() {
+
+            const search =
+                document.getElementById('searchBar')
+                .value
+                .toLowerCase();
+
+            const container =
+                document.getElementById('itemsContainer');
+
+            // If search is empty
+            if (search.trim() === "") {
+
+                container.innerHTML = "";
+
+                return;
+            }
+
+            let matchedItems = [];
+
+            // Search through all categories
+            Object.keys(menuData).forEach(category => {
+
+                menuData[category].forEach(item => {
+
+                    const itemName =
+                        item.name.toLowerCase();
+
+                    // Search item name
+                    if (itemName.includes(search)) {
+
+                        matchedItems.push(item);
+                    }
+
+                    // Search flavours
+                    if (item.flavours) {
+
+                        item.flavours.forEach(flavour => {
+
+                            if (
+                                flavour.toLowerCase()
+                                .includes(search)
+                            ) {
+
+                                matchedItems.push(item);
+                            }
+                        });
+                    }
+                });
+            });
+
+            // Remove duplicates
+            matchedItems =
+                [...new Set(matchedItems)];
+
+            let html = `
+                <div class="menu-items active">
+
+                    <button class="popup-back-btn"
+                        onclick="closeSearchResults()">
+                        ← Back
+                    </button>
+
+                    <h2>Search Results</h2>
+
+                    <div class="items">
+            `;
+                        
+            if (matchedItems.length === 0) {
+
+                html += `
+                    <p>No matching items found.</p>
+                `;
+
+            } else {
+
+                matchedItems.forEach(item => {
+                    html += createItemHTML(item);
+                });
+            }
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+            $('overlay')
+               .classList.add('active');
         }
 
     </script>
     
-    <div id="paymentPopup" class="payment-popup">
-        <div class="payment-box">
+    <div id="paymentPopup"
+        class="payment-popup"
+        onclick="cancelPayment()">
+
+        <div class="payment-box"
+            onclick="event.stopPropagation()">
+
             <h2>Select Payment Method</h2>
+
             <button class="payment-btn card-btn"
                 onclick="selectPayment('card')">
                 Pay with Card
             </button>
+
             <button class="payment-btn counter-btn"
                 onclick="selectPayment('counter')">
                 Pay at Counter
             </button>
+
         </div>
+
     </div>
     
-    <div id="overlay" class="overlay" onclick="closeAllPopups(); closeMenu();"></div>
+    <div id="overlay"
+         class="overlay"
+         onclick="
+            closeAllPopups();
+            closeMenu();
+            closeSearchResults();
+            cancelPayment();
+         ">
+    </div>
 
     <div id="inactivePopup" class="payment-popup">
         <div class="payment-box">
