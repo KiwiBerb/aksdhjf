@@ -1111,6 +1111,8 @@
         let countdownTimer;
         let countdown = 10;
         let currentOrderNumber = 1000;
+        let orderConfirmed = false;
+        let paymentProcessing = false;
 
         const $ = id => document.getElementById(id);
         
@@ -1700,6 +1702,8 @@
                 }, 10000);
 
             } else {
+                
+                paymentProcessing = true;
 
                 paymentBox.innerHTML = `
                     <h2>Processing Order...</h2>
@@ -1734,9 +1738,14 @@
 
                 .then(data => {
 
+                    paymentProcessing = false;
+                    orderConfirmed = true;
+
                     console.log(data);
 
                     currentOrderNumber = data.orderNumber;
+
+                    orderConfirmed = true;
 
                     paymentBox.innerHTML = `
                         <h2>Order Confirmed</h2>
@@ -1769,6 +1778,8 @@
 
                 .catch(error => {
 
+                    paymentProcessing = false;
+
                     console.error("FETCH ERROR:", error);
 
                 });
@@ -1776,6 +1787,17 @@
         }
 
         function cancelPayment() {
+
+            if (paymentProcessing) {
+                return;
+            }
+
+            if (orderConfirmed) {
+
+                resetSystem();
+                return;
+
+            }
 
             $('overlay')
                 .classList.remove('active');
@@ -1940,8 +1962,9 @@
 
         function resetSystem() {
 
-            clearTimeout(inactivityTimer);
+            orderConfirmed = false;
 
+            clearTimeout(inactivityTimer);
             clearInterval(countdownTimer);
 
             document.getElementById('inactivePopup').style.display = 'none';
